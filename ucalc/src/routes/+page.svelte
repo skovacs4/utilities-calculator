@@ -1,4 +1,6 @@
 <script>
+  // @ts-nocheck
+
   import { onMount } from "svelte";
 
   /*
@@ -68,6 +70,8 @@
           if (kWh <= tier.maxKWh) {
             pricePerMc = tier.price;
             break;
+          } else {
+            pricePerMc = 1.3;
           }
         }
         break;
@@ -83,37 +87,76 @@
     totalCost = totalCostWithoutVat * (1 + vatPercentage); // calc total cost with VAT
   }
 
+  function clearForm() {
+    totalCost = 0;
+    mc3 = 0;
+  }
+
+  /**
+   * @param {{ target: { value: string; }; }} event
+   */
+  function handleUtilityChange(event) {
+    selectedUtility = event.target.value;
+    clearForm();
+  }
+
   // Initialize calculation when component mounts
   onMount(() => {
     calculateCost();
   });
 </script>
 
-<h1>
-  Buna ziua, aici va puteti calcula costurile utilitatilor dumneavoastra in
-  functie de zona.
-</h1>
+<div class="h-screen flex flex-col justify-center items-center">
+  <!-- Content wrapped in a div with height 100vh, flexbox centered -->
+  <h1 class="text-2xl font-bold mb-4">
+    Buna ziua, aici va puteti calcula costurile utilitatilor dumneavoastra in
+    functie de zona.
+  </h1>
 
-<label for="utility">Selectati utilitatea:</label>
-<select id="utility" bind:value={selectedUtility}>
-  <option value="water">Apa</option>
-  <option value="electricity">Electricitate</option>
-  <option value="gas">Gaz</option>
-</select>
-
-{#if selectedUtility === "water"}
-  <label for="waterType">Selectati tipul de apa:</label>
-  <select id="waterType">
-    <option value="cold">Apa rece</option>
-    <option value="hot">Apa calda</option>
+  <label for="utility" class="block mb-2">Selectati utilitatea:</label>
+  <select
+    id="utility"
+    class="border border-gray-300 rounded-md p-2 mb-4"
+    bind:value={selectedUtility}
+    on:change={handleUtilityChange}
+  >
+    <option value="water">Apa</option>
+    <option value="electricity">Electricitate</option>
+    <option value="gas">Gaz</option>
   </select>
-{/if}
 
-<label for="mc3">Introduceti numarul de unitati utilizate:</label>
-<input type="number" id="mc3" bind:value={mc3} />
+  {#if selectedUtility === "water"}
+    <label for="waterType" class="block mb-2">Selectati tipul de apa:</label>
+    <select id="waterType" class="border border-gray-300 rounded-md p-2 mb-4">
+      <option value="cold">Apa rece</option>
+      <option value="hot">Apa calda</option>
+    </select>
+  {/if}
 
-<button on:click={calculateCost}>Calculeaza costul</button>
+  <label for="mc3" class="block mb-2"
+    >Introduceti numarul de unitati utilizate:</label
+  >
+  <input
+    type="number"
+    id="mc3"
+    class="border border-gray-300 rounded-md p-2 mb-4"
+    bind:value={mc3}
+  />
 
-{#if totalCost > 0}
-  <p>Costul total este (include TVA): {totalCost.toFixed(2)} lei.</p>
-{/if}
+  <button
+    class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+    on:click={calculateCost}
+  >
+    Calculeaza costul
+  </button>
+
+  {#if totalCost > 0}
+    <p class="mt-4">
+      Costul total este (include TVA): {totalCost.toFixed(2)} lei.
+    </p>
+  {/if}
+</div>
+
+<style lang="postcss">
+  /* Empty style block */
+</style>
