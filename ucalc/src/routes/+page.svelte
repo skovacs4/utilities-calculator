@@ -113,7 +113,7 @@
       class="w-full md:w-1/2 lg:w-1/3 xl:w-1/2 bg-white p-6 rounded-lg shadow-md flex flex-col "
     >
       <div class="items-center mx-auto text-center mb-4">
-        <img src="src/lib/assets/logo-light.png" alt="Logo" width="250" height="250">
+        <img src="logo-light.png" alt="Logo" width="250" height="250">
       </div>
       
 
