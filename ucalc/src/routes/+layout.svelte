@@ -9,7 +9,7 @@
         <!-- <h1 class="text-2xl font-bold">Doneaza</h1> -->
     </header>
 
-    <a href="#" class="donate">Doneaza</a>
+    <a href="https://revolut.me/stefantb9v" target="_blank" class="donate">Doneaza</a>
 
     <!-- Main Content (provided as slot) -->
     <main>
