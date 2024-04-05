@@ -1,5 +1,40 @@
 <script>
+  // @ts-nocheck
+
   import { onMount } from "svelte";
+
+  /*
+  Calculare Electricitate
+
+  Preț facturat: 0,68 lei/kWh - Pentru consum lunar cuprins între 0 și 100 kWh. 
+  Preț facturat: 0,8 lei/kWh pentru consum lunar care este cuprins între 100,01 și 255 kWh; 
+  consumul de energie electrică cuprins între 255 și 300 kWh/lună se facturează la prețul de maximum 1,3 lei/kWh, cu TVA inclus.
+
+  Potrivit datelor statistice, consumul mediu anual de electricitate pentru o gospodărie din 
+  România este în general cuprins între 2.000 și 3.000 de kilowați-oră (kWh) pe an.
+  */
+
+  /*
+  Calculare Apa
+
+  Compania Apa va plăti mai multe pentru apă și canalizare. Astfel, potrivit anunțului Companiei Apa Brașov, 
+  începând cu data de 1 ianuarie 2024, prețul apei potabile produse, transportate și distribuite în întreaga arie de 
+  operare va fi de 7,66 lei/mc, cu TVA, iar tariful pentru canalizare – 
+  epurare va fi de 5,62 lei/mc, cu TVA. Astfel, tariful cumulat pentru serviciile oferite de Compania Apa Brașov va fi de 13,28 lei/mc, cu TVA.
+
+  Potrivit datelor statistice, consumul mediu anual de apă pentru o gospodărie din 
+  România este în general cuprins între 80 și 120 de metri cubi (mc3) pe an.
+  */
+
+  /*
+  Calculare Gaze
+
+  Autoritățile au impus o plafonare a prețurilor, astfel că s-a stabilit ca, cel puțin până în 
+  martie 2025, prețul la gaze naturale să fie maxim 0,31 lei/kWh (TVA inclus).
+
+  Potrivit datelor statistice, consumul mediu anual de gaze naturale pentru o gospodărie în 
+  România este în general cuprins între 700 și 1.000 de metri cubi (mc3) pe an.
+  */
 
   let mc3 = 0;
   let selectedUtility = "water";
@@ -50,7 +85,20 @@
 
     const vatPercentage = 0.19; // VAT percentage
     const totalCostWithoutVat = mc3 * pricePerMc;
-    totalCost = totalCostWithoutVat * (1 + vatPercentage);
+    totalCost = totalCostWithoutVat * (1 + vatPercentage); // calc total cost with VAT
+  }
+
+  function clearForm() {
+    totalCost = 0;
+    mc3 = 0;
+  }
+
+  /**
+   * @param {{ target: { value: string; }; }} event
+   */
+  function handleUtilityChange(event) {
+    selectedUtility = event.target.value;
+    clearForm();
   }
 
   // Initialize calculation when component mounts
@@ -81,6 +129,7 @@
         id="utility"
         class="block w-full py-2 px-3 border border-gray-300 rounded-md mb-4"
         bind:value={selectedUtility}
+        on:change={handleUtilityChange}
       >
         <option value="water">Apa</option>
         <option value="electricity">Electricitate</option>
@@ -117,7 +166,7 @@
 
       {#if totalCost > 0}
         <p class="text-gray-800">
-          Costul total este: {totalCost.toFixed(2)} lei.
+          Costul total este (include TVA - 19%): {totalCost.toFixed(2)} lei.
         </p>
       {/if}
 
